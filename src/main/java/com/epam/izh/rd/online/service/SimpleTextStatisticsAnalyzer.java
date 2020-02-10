@@ -52,7 +52,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfUniqueWords(String text) {
-        HashSet list= new HashSet();
+        HashSet<String> list= new HashSet<>();
         String[] arrayOfWords=splitTextIntoWords(text);
         for (int i = 0; i <arrayOfWords.length; i++) {
             list.add(arrayOfWords[i]);
