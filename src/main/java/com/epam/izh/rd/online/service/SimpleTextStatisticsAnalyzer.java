@@ -3,7 +3,6 @@ package com.epam.izh.rd.online.service;
 import com.epam.izh.rd.online.helper.Direction;
 
 import java.util.*;
-
 import static java.util.Collections.*;
 
 /**
@@ -23,7 +22,15 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countSumLengthOfWords(String text) {
-        return 0;
+        ArrayList<String> listOfWords= new ArrayList<>();
+
+        for (int i = 0; i < text.length(); i++) {
+            if(!String.valueOf(text.charAt(i)).matches("\\.?,?\\s?\"?-?\\n?")) {
+                listOfWords.add(String.valueOf(text.charAt(i)));
+            }
+        }
+
+        return  listOfWords.size();
     }
 
     /**
@@ -34,7 +41,8 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfWords(String text) {
-        return 0;
+        String[] arrayOfWords=splitTextIntoWords(text);
+        return arrayOfWords.length;
     }
 
     /**
@@ -44,7 +52,12 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfUniqueWords(String text) {
-        return 0;
+        HashSet list= new HashSet();
+        String[] arrayOfWords=splitTextIntoWords(text);
+        for (int i = 0; i <arrayOfWords.length; i++) {
+            list.add(arrayOfWords[i]);
+        }
+        return list.size();
     }
 
     /**
@@ -57,7 +70,12 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        return emptyList();
+        ArrayList<String> listOfWords= new ArrayList<>();
+        String[] arrayOfWords=splitTextIntoWords(text);
+        for (int i = 0; i < arrayOfWords.length; i++) {
+                listOfWords.add(arrayOfWords[i]);
+        }
+        return listOfWords;
     }
 
     /**
@@ -70,7 +88,12 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Set<String> getUniqueWords(String text) {
-        return emptySet();
+        HashSet<String> listOfUniqueWords=new HashSet<>();
+        String[] arrayOfWords=splitTextIntoWords(text);
+        for (int i = 0; i < arrayOfWords.length; i++) {
+            listOfUniqueWords.add(arrayOfWords[i]);
+        }
+        return listOfUniqueWords;
     }
 
     /**
@@ -82,7 +105,18 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
-        return emptyMap();
+        Map<String, Integer> listCountNumberOfWordsRepetitions= new HashMap<>();
+        String[] arrayOfWords=splitTextIntoWords(text);
+        for (int i = 0; i < arrayOfWords.length; i++) {
+            if(listCountNumberOfWordsRepetitions.containsKey(arrayOfWords[i])){
+                listCountNumberOfWordsRepetitions.replace(arrayOfWords[i],
+                        listCountNumberOfWordsRepetitions.get(arrayOfWords[i]),
+                        listCountNumberOfWordsRepetitions.get(arrayOfWords[i])+1);
+            }else{
+                listCountNumberOfWordsRepetitions.put(arrayOfWords[i],1);
+            }
+        }
+        return listCountNumberOfWordsRepetitions;
     }
 
     /**
@@ -95,6 +129,34 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
-        return emptyList();
+        ArrayList<String> listOfWords= new ArrayList<>();
+        String[] arrayOfWords=splitTextIntoWords(text);
+        for (int i = 0; i < arrayOfWords.length; i++) {
+            listOfWords.add(arrayOfWords[i]);
+        }
+        sort(listOfWords, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return (o1.length() - o2.length());
+            }
+        });
+        if(direction==Direction.ASC) {
+            return listOfWords;
+        }
+        else{
+
+            Collections.reverse(listOfWords);
+            return listOfWords;
+        }
+
+    }
+
+    public String[] splitTextIntoWords(String text){
+        text=text.replaceAll(" -","");
+        text=text.replaceAll("\\.","");
+        text=text.replaceAll(",","");
+        text=text.replaceAll("\"","");
+        text=text.replaceAll("\n"," ");
+        return text.split(" ");
     }
 }
